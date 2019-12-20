@@ -1,0 +1,125 @@
+digraph new_node{
+1104971088 [color = "yellow"; shape = record; label =";"]
+1104971296 [color = "blue"; shape = record; label ="$main"]
+1104971392 [color = "yellow"; shape = record; label =","]
+1104971488 [color = "yellow"; shape = record; label =","]
+1104971584 [color = "yellow"; shape = record; label =","]
+1104971792 [color = "red"; shape = record; label ="шаурма"]
+1104972000 [color = "red"; shape = record; label ="петя"]
+1104972880 [color = "red"; shape = record; label ="вася"]
+1104973088 [color = "black"; shape = record; label ="op"]
+1104973184 [color = "yellow"; shape = record; label ="="]
+1104973392 [color = "red"; shape = record; label ="пиво9"]
+1104973488 [color = "yellow"; shape = record; label ="*"]
+1104973584 [color = "green"; shape = record; label ="6000"]
+1104973792 [color = "black"; shape = record; label ="deriv"]
+1104974000 [color = "red"; shape = record; label ="x"]
+1104991200 [color = "green"; shape = record; label ="0"]
+1104975088 [color = "black"; shape = record; label ="op"]
+1104975184 [color = "yellow"; shape = record; label ="="]
+1104975392 [color = "red"; shape = record; label ="семки"]
+1104975488 [color = "green"; shape = record; label ="0"]
+1104975696 [color = "black"; shape = record; label ="op"]
+1104975904 [color = "black"; shape = record; label ="while"]
+1104976000 [color = "yellow"; shape = record; label =">"]
+1104976208 [color = "red"; shape = record; label ="семки"]
+1104976304 [color = "green"; shape = record; label ="0"]
+1104976512 [color = "black"; shape = record; label ="op"]
+1104976720 [color = "black"; shape = record; label ="put"]
+1104976816 [color = "green"; shape = record; label ="0"]
+1104977024 [color = "black"; shape = record; label ="op"]
+1104977232 [color = "black"; shape = record; label ="if"]
+1104977328 [color = "yellow"; shape = record; label ="=="]
+1104977536 [color = "red"; shape = record; label ="пиво9"]
+1104977632 [color = "green"; shape = record; label ="2000"]
+1104977840 [color = "black"; shape = record; label ="if-else"]
+1104978048 [color = "black"; shape = record; label ="op"]
+1104979568 [color = "black"; shape = record; label ="ret"]
+1104979776 [color = "red"; shape = record; label ="пиво9"]
+1104979984 [color = "black"; shape = record; label ="op"]
+1104980192 [color = "black"; shape = record; label ="ret"]
+1104980400 [color = "red"; shape = record; label ="пиво9"]
+1104980608 [color = "black"; shape = record; label ="op"]
+1104980816 [color = "black"; shape = record; label ="if"]
+1104980912 [color = "yellow"; shape = record; label ="=="]
+1104981120 [color = "red"; shape = record; label ="пиво"]
+1104981216 [color = "green"; shape = record; label ="0"]
+1104981424 [color = "black"; shape = record; label ="if-else"]
+1104981632 [color = "black"; shape = record; label ="op"]
+1104981840 [color = "black"; shape = record; label ="put"]
+1104982048 [color = "red"; shape = record; label ="пиво"]
+1104982256 [color = "black"; shape = record; label ="op"]
+1104982464 [color = "black"; shape = record; label ="ret"]
+1104982560 [color = "green"; shape = record; label ="2000"]
+1104982768 [color = "black"; shape = record; label ="op"]
+1104982864 [color = "yellow"; shape = record; label ="="]
+1104983072 [color = "red"; shape = record; label ="a"]
+1104983280 [color = "blue"; shape = record; label ="$main"]
+1104983376 [color = "yellow"; shape = record; label =","]
+1104983472 [color = "yellow"; shape = record; label =","]
+1104983568 [color = "yellow"; shape = record; label =","]
+1104983776 [color = "red"; shape = record; label ="в"]
+1104983984 [color = "red"; shape = record; label ="б"]
+1104984192 [color = "red"; shape = record; label ="а"]
+1104971088 -> 1104971296
+1104971296 -> 1104971392
+1104971296 -> 1104973088
+1104971392 -> 1104971488
+1104971392 -> 1104972880
+1104971488 -> 1104971584
+1104971488 -> 1104972000
+1104971584 -> 1104971792
+1104973088 -> 1104973184
+1104973088 -> 1104975088
+1104973184 -> 1104973392
+1104973184 -> 1104973488
+1104973488 -> 1104973584
+1104973488 -> 1104973792
+1104973792 -> 1104974000
+1104973792 -> 1104991200
+1104975088 -> 1104975184
+1104975088 -> 1104975696
+1104975184 -> 1104975392
+1104975184 -> 1104975488
+1104975696 -> 1104975904
+1104975696 -> 1104980608
+1104975904 -> 1104976000
+1104975904 -> 1104976512
+1104976000 -> 1104976208
+1104976000 -> 1104976304
+1104976512 -> 1104976720
+1104976512 -> 1104977024
+1104976720 -> 1104976816
+1104977024 -> 1104977232
+1104977232 -> 1104977328
+1104977232 -> 1104977840
+1104977328 -> 1104977536
+1104977328 -> 1104977632
+1104977840 -> 1104978048
+1104977840 -> 1104979984
+1104978048 -> 1104979568
+1104979568 -> 1104979776
+1104979984 -> 1104980192
+1104980192 -> 1104980400
+1104980608 -> 1104980816
+1104980608 -> 1104982768
+1104980816 -> 1104980912
+1104980816 -> 1104981424
+1104980912 -> 1104981120
+1104980912 -> 1104981216
+1104981424 -> 1104981632
+1104981424 -> 1104982256
+1104981632 -> 1104981840
+1104981840 -> 1104982048
+1104982256 -> 1104982464
+1104982464 -> 1104982560
+1104982768 -> 1104982864
+1104982864 -> 1104983072
+1104982864 -> 1104983280
+1104983280 -> 1104983376
+1104983376 -> 1104983472
+1104983376 -> 1104984192
+1104983472 -> 1104983568
+1104983472 -> 1104983984
+1104983568 -> 1104983776
+}

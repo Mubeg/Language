@@ -1,0 +1,383 @@
+#pragma once
+#include <iostream>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <algorithm>
+#include <ctype.h>
+#include <math.h>
+#include <string.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <locale.h>
+
+#ifdef USING_WCHAR_T
+#include <wchar.h>
+#include <wctype.h>
+#endif
+
+const int DEFAULT = 0;
+const int MEMORY_PROB = 9;
+const char DEFAULT_FILE[] = "poem.txt";
+const int FNF = 3;
+const int ADD_FAILED = 4;
+const int FILE_OPER_PROBLEM = 5;
+const int NO_RIGHTS = 8;
+const int MAX_LINE_LEN  = 100;
+#define MAX_LINE_LEN_PRINT "100"
+
+//#define USING_WCHAR_T
+//#undef USING_WCHAR_T
+
+#ifndef USING_WCHAR_T
+typedef char Buff_elem_t;
+
+#define wmemchr memchr
+#define iswalpha isalpha
+#define fgetwc fgetc
+#define wcslen strlen
+#define wcscpy strcpy
+#define wcscmp strcmp
+#define wcscasecmp strcasecmp
+#define swscanf sscanf
+#define towlower tolower
+#define wscanf scanf
+#define iswdigit isdigit
+
+#define Long_char "c"
+#define Long_str "s"
+#define Long_string(x) x
+#define IS_LONG_STR ""
+
+#else
+typedef wchar_t Buff_elem_t;
+
+#define memchr wmemchr
+#define isalpha iswalpha
+#define fgetc fgetwc
+#define strlen wcslen
+#define strcpy wcscpy
+#define strcmp wcscmp
+#define strcasecmp wcscasecmp
+#define sscanf swscanf
+#define tolower towlower
+#define scanf wscanf
+#define isdigit iswdigit
+
+#define Long_char "C"
+#define Long_str "S"
+#define Long_string(x) L ## x
+#define IS_LONG_STR "l"
+
+#endif
+
+/*!
+Структура string и указатель на неё str_ptr
+*/
+typedef struct str * str_ptr;
+struct str {
+	Buff_elem_t *str;
+	int size;
+};
+
+
+
+bool is_digits(str_ptr s);
+
+
+str make_str(Buff_elem_t *s);
+
+
+/*!
+Создаёт одномерный массив и читает в него сырой текст из файла
+\param[in] file_name[] Название файла
+\param[out] buff_size Размер созданого массива
+\return Указатель на массив
+*/
+Buff_elem_t *read_file_to_created_buff(const char file_name[], int *buff_size);
+
+
+Buff_elem_t *read_file_to_created_buff_opened_file(FILE * file, int *buff_size);
+
+/*!
+Рассчитывает размер файла, указатель файла ставится в начало
+\param[in] file - структура FILE * открытого файла
+\param[in] mode //none in alpha
+\return Размер файла в int
+*/
+int get_file_length(FILE *file); //alpha version
+
+/*!
+Создаёт массив указателей на начало строк и заменяет '\n' на '\0'
+\param[in] buff Указатель на массив сырого текста
+\param[in] buff_size Размер массива
+\param[out] text_size Размер созданного массива
+\return Указатель на массив
+*/
+str_ptr make_text_must_free(Buff_elem_t buff[], const int buff_size, int * const text_size);
+
+
+int change_ch1_to_ch2_and_count_in_ch_buff(const Buff_elem_t char1, const Buff_elem_t char2, Buff_elem_t buff[], const int buff_size);
+
+
+int fill_string_split_by_separator_and_skip_non_alpha_lines_from_ch_buff(str_ptr text, const Buff_elem_t separator, Buff_elem_t buff[], const int buff_size);
+
+
+int fill_string_split_by_separator_from_ch_buff(str_ptr text, const Buff_elem_t separator, Buff_elem_t buff[], const int buff_size);
+
+
+
+
+
+bool is_digits(str_ptr s){
+
+	if(s == nullptr){
+		return false;
+	}
+
+	for(int i = 0; i < s->size; i++){
+
+		if(!(isdigit(s->str[i]))){
+			return false;
+		}
+	}
+
+
+	return true;
+}
+
+
+str make_str(Buff_elem_t *s){
+
+	if(s == nullptr){
+
+		str temp = {};
+		temp.size = -1;
+		return temp;
+	}
+	
+	str temp = {};
+	temp.str = s;
+	temp.size = strlen(s);
+	
+	return temp;
+}
+
+Buff_elem_t *read_file_to_created_buff(const char file_name[], int *buff_size){
+
+	assert(file_name[0] != '\0');
+	assert(file_name);
+
+	FILE *file = fopen(file_name, "r");
+	if(!file){
+		fprintf(stderr, "Cannot open file %s\n", file_name);
+		return nullptr;
+	}
+	
+	const int file_length = get_file_length(file);
+	if(file_length < 0){
+		fprintf(stderr, "get_file_length() return incorrect\n");
+		return nullptr;
+	}
+
+	*buff_size = file_length + 1;
+	Buff_elem_t *buff = (Buff_elem_t *) calloc(*buff_size, sizeof(Buff_elem_t));
+
+
+	#ifdef USING_WCHAR_T
+	char *temp_buff = (char *) calloc(*buff_size, sizeof(char));
+
+	int num_read = fread(temp_buff, 1, file_length, file);
+	if(num_read == -1 || num_read != file_length){	
+		return nullptr;
+	}
+
+	fclose(file);
+
+	*buff_size = mbstowcs(buff, temp_buff, file_length);
+	if(*buff_size < 0){
+		return nullptr;
+	}
+
+	free(temp_buff);
+
+	#else
+	int num_read = fread(buff, 1, file_length, file);
+	if(num_read == -1 || num_read != file_length){	
+		return nullptr;
+	}
+
+	fclose(file);
+	#endif
+
+	return buff;
+}
+
+Buff_elem_t *read_file_to_created_buff_opened_file(FILE * file, int *buff_size){
+
+	assert(file      != nullptr);
+	assert(buff_size != nullptr);
+	
+	const int file_length = get_file_length(file);
+	if(file_length < 0){
+		fprintf(stderr, "get_file_length() return incorrect (%d)\n", file_length);
+		return nullptr;
+	}
+
+	*buff_size = file_length + 1;
+	Buff_elem_t *buff = (Buff_elem_t *) calloc(*buff_size, sizeof(Buff_elem_t));
+
+
+	#ifdef USING_WCHAR_T
+	char *temp_buff = (char *) calloc(*buff_size, sizeof(char));
+
+	int num_read = fread(temp_buff, 1, file_length, file);
+	if(num_read == -1 || num_read != file_length){	
+		return nullptr;
+	}
+
+	fclose(file);
+
+	*buff_size = mbstowcs(buff, temp_buff, file_length);
+	if(*buff_size < 0){
+		return nullptr;
+	}
+
+	free(temp_buff);
+
+	#else
+	int num_read = fread(buff, 1, file_length, file);
+	if(num_read == -1 || num_read != file_length){	
+		return nullptr;
+	}
+
+	#endif
+
+	return buff;
+}
+
+
+int get_file_length(FILE *file){
+
+	assert(file != nullptr);
+
+	int ans = 0;
+
+	if(fseek(file, 0, SEEK_END)){
+		fprintf(stderr, "fseek in %s SEEK_END return not zero\n", __PRETTY_FUNCTION__);
+	}
+	if((ans = ftell(file)) == -1L){
+		fprintf(stderr, "ftell in %s return -1L\n", __PRETTY_FUNCTION__);
+	}
+	if(fseek(file, 0, SEEK_SET)){
+		fprintf(stderr, "fseek in %s SEEK_SET return not zero\n", __PRETTY_FUNCTION__);
+	}
+	
+	return ans	;
+}
+
+str_ptr make_text_must_free(Buff_elem_t buff[], const int buff_size, int * const text_size){
+
+	assert(buff      != nullptr);
+	assert(text_size != nullptr);
+	assert(buff_size >= 0);
+
+	int num_lines = 0;
+
+	num_lines = change_ch1_to_ch2_and_count_in_ch_buff(Long_string('\n'), Long_string('\0'), buff, buff_size);
+
+	str_ptr text = nullptr;
+	text = (str_ptr) calloc(num_lines + 1, sizeof(str)); // text[num_lines].size = -1
+	if(!text){
+		fprintf(stderr, "Mem calloc for text in %s problem", __PRETTY_FUNCTION__);
+	}
+
+	*text_size = fill_string_split_by_separator_from_ch_buff(text, Long_string('\0'), buff, buff_size);
+
+	text[*text_size].size = -1;
+	
+	return text;
+}
+
+int change_ch1_to_ch2_and_count_in_ch_buff(const Buff_elem_t char1, const Buff_elem_t char2, Buff_elem_t buff[], const int buff_size){
+
+	assert(buff      != nullptr);
+	assert(buff_size >= 0      );
+
+	int num_lines = 0;
+
+	for(Buff_elem_t * ptr = (Buff_elem_t *) wmemchr(buff, char1, buff_size);
+	    ptr < buff + buff_size;
+	    ptr = (Buff_elem_t *) wmemchr(ptr + 1, char1, buff + buff_size - 1 - ptr)){
+
+		if(!ptr)
+			break;
+	
+		num_lines++;
+		*ptr = char2;
+	}
+	
+	return num_lines;
+}
+
+int fill_string_split_by_separator_and_skip_non_alpha_lines_from_ch_buff(str_ptr text, const Buff_elem_t separator, Buff_elem_t buff[], const int buff_size){
+	
+	assert(text      != nullptr);
+	assert(buff      != nullptr);
+	assert(buff_size >= 0      );
+
+	bool found = false;
+	bool has_alpha = false;
+	int text_ptr = 0;
+	int last_i = 0;
+
+	for(int i = 0; i < buff_size; i+= sizeof(buff[0])){
+
+		if(found){
+			if(has_alpha){
+				text[text_ptr].str = buff + last_i;
+				text[text_ptr].size = i - last_i;
+				text_ptr++;
+				has_alpha = false;
+			}
+			last_i = i;
+			found = false;
+		}
+		if(buff[i] == separator){
+			found = true;
+		}
+		if(iswalpha(buff[i])){
+			has_alpha = true;
+		}
+		
+	}
+	
+	return text_ptr - 1;
+}
+
+int fill_string_split_by_separator_from_ch_buff(str_ptr text, const Buff_elem_t separator, Buff_elem_t * buff, const int buff_size){
+	
+	assert(text      != nullptr);
+	assert(buff      != nullptr);
+	assert(buff_size >= 0      );
+
+	int text_ptr = 0;
+	text[0].str = buff;
+	Buff_elem_t * last_ptr = buff;
+
+	for(Buff_elem_t * ptr = (Buff_elem_t *) wmemchr(buff, separator, buff_size);
+	    ptr < buff + buff_size;
+	    ptr = (Buff_elem_t *) wmemchr(last_ptr, separator, buff + buff_size - 1 - ptr)){
+		
+		if(ptr == nullptr)
+			break;
+
+		text_ptr++;
+		text[text_ptr - 1].str = last_ptr;
+		text[text_ptr - 1].size = ptr - last_ptr + 1;
+		last_ptr = ptr + 1;
+	}
+
+	return text_ptr - 1;
+}
+

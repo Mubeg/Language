@@ -1,0 +1,22 @@
+G         ::= {FUNC}+'\0'
+FUNC      ::= OP | FUNC_DEF
+OP 	  ::= PUT | GET | ASSIGN | INIT | IF | WHILE | RETURN | E';' | '{'OP+'}'
+FUNC_DEF  ::= ID'('{ID{','ID}*}$')'OP
+PUT	  ::= 'введи'ID';'
+GET	  ::= 'напечатай'E';'
+E         ::= DERIV | CMP{['+''-']CMP}*
+//INIT      ::= 'число'ID';'
+DERIV     ::= 'производная'E'по'ID
+IF        ::= 'если'E'то'OP{ELSE}$
+ELSE      ::= 'а'OP
+WHILE     ::= 'пока''('E')'OP
+RETURN    ::= 'верни'E';'
+ASSIGN    ::= ID'='E';'
+CMP       ::= T{['<''>''==''!=''>=''<=']T}*
+T         ::= POW{['*''/']POW}*
+POW       ::= UNAR{'^'UNAR}*
+UNAR      ::= ['+''-']P | P
+P         ::= N | FUNC_CALL | ID | '('E')'
+FUNC_CALL ::= ID'('{E{','E}*}$')'
+ID        ::= ['а'-'я''А'-'Я']+
+N         ::= ['0'-'9']+

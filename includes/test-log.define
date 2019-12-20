@@ -1,0 +1,21 @@
+#pragma once
+#define LOG_LEVEL 0
+#define TEST_LEVEL 0
+#define LOCATION_PRINT "in file %s line %d function %s"
+#define DEFAULT_MESSAGE_LOG(str) "Write the " #str LOCATION_PRINT
+#define LOG(log_l, msg, args) 	if(log_l != 0 && log_l >= LOG_LEVEl){\
+			      		fprintf(stderr, (msg[0] == '\0') ? DEFAULT_MESSAGE_LOG(__FUNCTION__) "\n" : (msg), (msg[0] == '\0') ? __LOCATION__ : args);\
+			      	}
+
+#define test(test_l, msg, condition)	if(test_l != 0 && test_l <= TEST_LEVEL){\
+						static bool is_recursing = false;\
+						if(is_recursing){is_recursing = false;}\
+						else if(msg[0] != '\0'){\
+							fprintf(stderr, "Need realization \"" #msg "\"\n");\
+						}\
+						else if(!(is_recursing = true, condition)){	\
+							fprintf(stderr, "Test failure " #condition " " LOCATION_PRINT "\ns", __LOCATION__);\
+						}\
+					}
+
+#define __LOCATION__ __FILE__, __LINE__, __PRETTY_FUNCTION__
